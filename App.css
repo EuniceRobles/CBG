@@ -1,0 +1,154 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Chicken Banana Game Styles */
+body {
+  background: linear-gradient(135deg, #fffbe6 0%, #ffe4b5 100%);
+  min-height: 100vh;
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+}
+
+.container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff8e1;
+  border-radius: 18px;
+  box-shadow: 0 6px 32px 0 rgba(0,0,0,0.10);
+  padding: 32px;
+  text-align: center;
+}
+
+h1 {
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  color: #e6b800;
+  font-size: 2.7rem;
+  margin-bottom: 18px;
+  letter-spacing: 2px;
+  text-shadow: 1px 2px 0 #fffbe6, 0 2px 8px #ffe13544;
+}
+
+button {
+  background-color:#e6b800;
+  color: #7a5c00;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 10px 28px;
+  margin: 0 8px;
+  box-shadow: 0 2px 8px #ffe13544;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+button:active {
+  transform: scale(0.97);
+}
+button:disabled {
+  background: #eee;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.grid {
+  margin: 0 auto;
+  margin-top: 18px;
+  margin-bottom: 18px;
+  background: #fffbe6;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #ffe13533;
+  padding: 18px 0 12px 0;
+}
+
+.square {
+  border-radius: 10px;
+  border: 2.5px solid #ffe135;
+  box-shadow: 0 2px 8px #ffe13533;
+  background: #fffbe6;
+  transition: transform 0.08s, box-shadow 0.2s;
+}
+.square:hover {
+  transform: scale(1.07);
+  box-shadow: 0 4px 16px #ffe13555;
+  z-index: 2;
+}
+
+/* Covered square */
+.grid > div > div {
+  background: repeating-linear-gradient(135deg, #ffe135 0 10px, #fffbe6 10px 20px);
+  color: #e6b800;
+  border: 2.5px solid #e6b800; /* Changed from dashed to solid */
+  border-radius: 10px;
+  font-size: 2.2rem;
+  font-family: 'Luckiest Guy', cursive, sans-serif;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px #ffe13533;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.grid > div > div:hover {
+  background: #ffe135;
+  color: #fffbe6;
+  box-shadow: 0 4px 16px #ffe13555;
+}
+
+/* Info and status */
+.status, .info {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #7a5c00;
+  font-weight: bold;
+}
+.status b {
+  color: #e6b800;
+}
+
+@media (max-width: 700px) {
+  .container {
+    padding: 10px 2vw;
+  }
+  .grid {
+    padding: 8px 0 8px 0;
+  }
+  .square {
+    width: 48px !important;
+    height: 48px !important;
+  }
+  .grid > div > div {
+    font-size: 1.3rem;
+  }
+}
