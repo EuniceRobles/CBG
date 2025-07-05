@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
   import './App.css';
-
-  /*This app switches between two players. Player 1 is set as Chicken and Player 2 is set as Banana.
-  Player 1 will lose if they chose a Banana tile and Player 2 will lose if they click on a Chicken tile.*/
   
   const bananaUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNYit0d79tjmgyI8ZyKxJRld02Iz2kGsjDiQ&s';
   const chickenUrl = 'https://cdn-icons-png.flaticon.com/512/10132/10132012.png';
