@@ -20,9 +20,6 @@ import React, { useState } from 'react';
 
     const bananaCount = revealed.filter((r, i) => r && images[i] === bananaUrl).length;
     const chickenCount = revealed.filter((r, i) => r && images[i] === chickenUrl).length;
-    const totalRevealed = bananaCount + chickenCount;
-    const bananaPercent = totalRevealed ? ((bananaCount / totalRevealed) * 100).toFixed(1) : 0;
-    const chickenPercent = totalRevealed ? ((chickenCount / totalRevealed) * 100).toFixed(1) : 0;
 
     // Calculate how many bananas and chickens have been revealed
     const totalBananas = images.filter(img => img === bananaUrl).length;
