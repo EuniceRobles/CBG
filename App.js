@@ -62,7 +62,7 @@ import React, { useState } from 'react';
         <h1> Chicken Banana Game!</h1>
         <button onClick={handleReset} style={{marginBottom: '15px'}}>Reset Board</button>
         <div style={{marginBottom: '10px', fontWeight: 'bold'}}>
-          Bananas revealed:  ({bananaPercentRevealed}%) | Chickens revealed: {chickenCount} ({chickenPercentRevealed}%)
+          Bananas revealed:  ({bananaPercentRevealed}%) | Chickens revealed: ({chickenPercentRevealed}%)
         </div>
         <div style={{marginBottom: '10px', fontWeight: 'bold'}}>
           {gameOver ? (
