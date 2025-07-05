@@ -1,22 +1,27 @@
 import React, { useState } from 'react';
   import './App.css';
 
-  const bananaUrl = 'https://thumbs.dreamstime.com/b/bunch-bananas-6175887.jpg?w=768';
-  const chickenUrl = 'https://thumbs.dreamstime.com/z/full-body-brown-chicken-hen-standing-isolated-white-backgroun-background-use-farm-animals-livestock-theme-49741285.jpg?ct=jpeg';
+  /*This app switches between two players. Player 1 is set as Chicken and Player 2 is set as Banana.
+  Player 1 will lose if they chose a Banana tile and Player 2 will lose if they click on a Chicken tile.*/
+  
+  const bananaUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNYit0d79tjmgyI8ZyKxJRld02Iz2kGsjDiQ&s';
+  const chickenUrl = 'https://cdn-icons-png.flaticon.com/512/10132/10132012.png';
 
   function getRandomImage() {
-    // 50/50 chance for banana or chicken
-    return Math.random() < 0.5 ? bananaUrl : chickenUrl;
-  }
+  // 50/50 chance for banana or chicken
+  return Math.random() < 0.50 ? bananaUrl : chickenUrl;
+}
 
   function App() {
     // Create a 6x6 grid (36 images)
     const gridSize = 6 * 6;
-    const [images, setImages] = useState(Array(gridSize).fill().map(getRandomImage));
+    let chickenI = 18;
+    const [images, setImages] = useState(Array(gridSize).fill().map(() => getRandomImage() === chickenUrl && chickenI-- > 0 ? chickenUrl : bananaUrl));
     const [revealed, setRevealed] = useState(Array(gridSize).fill(false));
     const [currentPlayer, setCurrentPlayer] = useState(1); // player 1 or 2
     const [winner, setWinner] = useState(null); // 1 or 2 or 'draw'
     const [gameOver, setGameOver] = useState(false);
+    
 
     const bananaCount = revealed.filter((r, i) => r && images[i] === bananaUrl).length;
     const chickenCount = revealed.filter((r, i) => r && images[i] === chickenUrl).length;
@@ -24,11 +29,17 @@ import React, { useState } from 'react';
     // Calculate how many bananas and chickens have been revealed
     const totalBananas = images.filter(img => img === bananaUrl).length;
     const totalChickens = images.filter(img => img === chickenUrl).length;
-    const bananaPercentRevealed = totalBananas ? ((bananaCount / totalBananas) * 100).toFixed(1) : 0;
-    const chickenPercentRevealed = totalChickens ? ((chickenCount / totalChickens) * 100).toFixed(1) : 0;
+    const bananaPercentRevealed = totalBananas ? Math.round(((bananaCount / totalBananas) * 100)) : 0;
+    const chickenPercentRevealed = totalChickens ? Math.round(((chickenCount / totalChickens)) * 100): 0;
 
     // Remove playerChoice state, use currentPlayer to determine role
     const getPlayerRole = (player) => (player === 1 ? 'chicken' : 'banana');
+
+    // Switches the player roles (chicken <-> banana)
+    const switchPlayerRole = () => {
+      setCurrentPlayer((prev) => (prev === 1 ? 2 : 1));
+    };
+
 
     // Reveal a single image on click
     const handleReveal = (index) => {
@@ -39,6 +50,8 @@ import React, { useState } from 'react';
       if (playerRole !== actual) {
         setWinner(currentPlayer === 1 ? 2 : 1);
         setGameOver(true);
+        // Reveal all tiles when someone loses
+        setRevealed(Array(gridSize).fill(true));
       } else {
         // Continue to next player
         setCurrentPlayer(p => (p === 1 ? 2 : 1));
@@ -54,19 +67,55 @@ import React, { useState } from 'react';
       setGameOver(false);
     };
 
+    // Reset board when 'r'/'R' is pressed
+    React.useEffect(() => {
+      const handleKeyDown = (e) => {
+        if (e.key === 'r' || e.key === 'R') {
+          handleReset();
+        }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+    // Switch player role when 's'/'S' is pressed
+
     return (
       <div className="container">
         <h1> Chicken Banana Game!</h1>
-        <button onClick={handleReset} style={{marginBottom: '15px'}}>Reset Board</button>
-        <div style={{marginBottom: '10px', fontWeight: 'bold'}}>
-          Bananas revealed:  ({bananaPercentRevealed}%) | Chickens revealed: ({chickenPercentRevealed}%)
+        <div style={{marginBottom: '10px'}}>
+          Bananas revealed:  <b>({bananaPercentRevealed}%)</b> | Chickens revealed: <b>({chickenPercentRevealed}%)</b>
         </div>
         <div style={{marginBottom: '10px', fontWeight: 'bold'}}>
           {gameOver ? (
-            winner === 'draw' ? 'Draw!' : `Player ${winner} wins!`
+            <>
+              {winner === 'draw' ? (
+                'Draw!'
+              ) : (
+                <>
+                  {`Player ${winner} wins!`}
+                  <div style={{ marginTop: '16px' }}>
+                    {winner === 1 && (
+                      <imgs
+                        src="https://img.itch.zone/aW1hZ2UvNDc4NTkvMjExMjY5LmdpZg==/original/iEdCFj.gif"
+                        alt="Player 1 Wins"
+                        style={{ width: '180px', borderRadius: '12px', boxShadow: '0 2px 12px #ffe13555' }}
+                      />
+                    )}
+                    {winner === 2 && (
+                      <img
+                        src="https://img.itch.zone/aW1hZ2UvNDc4NTkvMjExMjYyLmdpZg==/original/V5R6XE.gif"
+                        alt="Player 2 Wins"
+                        style={{ width: '180px', borderRadius: '12px', boxShadow: '0 2px 12px #ffe13555' }}
+                      />
+                    )}
+                  </div>
+                </>
+              )}
+            </>
           ) : (
             <>
-              Player {currentPlayer}'s turn as <b>{getPlayerRole(currentPlayer).charAt(0).toUpperCase() + getPlayerRole(currentPlayer).slice(1)}</b>. Click a square!
+              It's <b>{getPlayerRole(currentPlayer).toUpperCase()}</b>'s turn. Click a square!
             </>
           )}
         </div>
@@ -80,38 +129,79 @@ import React, { useState } from 'react';
           margin: '0 auto'
         }}>
           {images.map((img, index) => (
-            <div key={index} style={{ width: '80px', height: '80px', position: 'relative' }}>
-              {revealed[index] ? (
-                <img
-                  src={img}
-                  alt={img === bananaUrl ? 'Banana' : 'Chicken'}
-                  className="square"
-                  style={{ width: '80px', height: '80px', objectFit: 'cover', cursor: 'default' }}
-                />
-              ) : (
-                <div
-                  onClick={() => handleReveal(index)}
-                  style={{
-                    width: '80px',
-                    height: '80px',
-                    background: '#ccc',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: gameOver ? 'not-allowed' : 'pointer',
-                    borderRadius: '8px',
-                    fontWeight: 'bold',
-                    fontSize: '2rem',
-                    userSelect: 'none',
-                    opacity: gameOver ? 0.5 : 1,
-                  }}
-                >
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+  <div key={index} style={{ width: '80px', height: '80px', position: 'relative' }}>
+    {revealed[index] ? (
+      <img
+        src={img}
+        alt={img === bananaUrl ? 'Banana' : 'Chicken'}
+        className="square"
+        style={{ width: '80px', height: '80px', objectFit: 'cover', cursor: 'default' }}
+      />
+    ) : (
+      <div
+        onClick={() => handleReveal(index)}
+        style={{
+          width: '80px',
+          height: '80px',
+          background: '#ccc',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: gameOver ? 'not-allowed' : 'pointer',
+          borderRadius: '8px',
+          fontWeight: 'bold',
+          fontSize: '2rem',
+          userSelect: 'none',
+          opacity: gameOver ? 0.5 : 1,
+          fontFamily: 'Impact, Charcoal, sans-serif',
+        }}
+      >
+        {index + 1}
       </div>
+    )}
+  </div>
+))}
+
+        </div>
+        <button
+          onClick={switchPlayerRole}
+          disabled={revealed.some(r => r)} // Disable if any tile is revealed
+          style={{
+            marginBottom: '16px',
+            fontWeight: 'bold',
+            background: '#ffe135',
+            color: '#7a5c00',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '1.1rem',
+            padding: '10px 28px',
+            boxShadow: '0 2px 8px #ffe13544',
+            cursor: revealed.some(r => r) ? 'not-allowed' : 'pointer',
+            transition: 'background 0.2s, transform 0.1s'
+          }}
+        >
+          Switch Player
+        </button>
+        <button
+          onClick={handleReset}
+          style={{
+            marginBottom: '16px',
+            fontWeight: 'bold',
+            background: '#ffe135',
+            color: '#7a5c00',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '1.1rem',
+            padding: '10px 28px',
+            boxShadow: '0 2px 8px #ffe13544',
+            cursor: revealed.some(r => r) ? 'not-allowed' : 'pointer',
+            transition: 'background 0.2s, transform 0.1s'
+          }}
+        >
+          Reset Game
+        </button>
+      </div>
+      
     );
   }
 
